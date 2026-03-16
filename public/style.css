@@ -1,0 +1,78 @@
+#root {
+    width: 90vw;
+    height: 90vh;
+}
+
+/* PIANO MARKERS */
+.piano-marker {
+    width: 32px;
+    height: 32px;
+    background: gold;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.piano-marker span {
+    transform: rotate(45deg);
+    font-size: 16px;
+}
+
+/* GEOLOCATION BUTTON */
+.location-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #1a1814;
+    border: 1px solid #333020;
+    color: #e8e0cc;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 500;
+    transition: all 0.18s ease;
+}
+
+.location-btn:hover {
+    border-color: #c9a84c;
+    color: #c9a84c;
+}
+
+.location-btn.active {
+    border-color: #4a9e7a;
+    color: #4a9e7a;
+    background: rgba(74,158,122,0.1);
+}
+
+.location-btn.error {
+    border-color: #e05555;
+    color: #e05555;
+    background: rgba(224, 85, 85, 0.1);
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #8a8070;
+    flex-shrink: 0;
+}
+
+.location-btn.active .dot {
+    background: #4a9e7a;
+    box-shadow: 0 0 6px #4a9e7a;
+    animation: pulse 2s infinite;
+}
+
+.location-btn.error .dot {
+    background: #e05555;
+    box-shadow: 0 0 6px #e05555;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
