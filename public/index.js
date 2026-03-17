@@ -4,10 +4,10 @@ const { useEffect, useRef, useState } = React;
 const PIANOS = [
     {
         id: 1,
-        name: "Piano Room A & B",
+        name: "Piano Room A",
         building: "Student Life Centre",
         building_code: "SLC",
-        room: "{}, {}",
+        room: "{}",
         lat: 43.4718576, lng: -80.5454194,
         tags: ["indoor"],
         bookable: true,
@@ -16,31 +16,102 @@ const PIANOS = [
     },
     {
         id: 2,
+        name: "Piano Room B",
+        building: "Student Life Centre",
+        building_code: "SLC",
+        room: "{}",
+        lat: 43.4718576, lng: -80.5454194,
+        tags: ["indoor"],
+        bookable: true,
+        hours: "Open 24 hours",
+        notes: "Two private piano rooms available for booking. Call the Turnkey Desk at the SLC to reserve.",
+    },
+    {
+        id: 3,
+        name: "Piano Room",
+        building: "Science Teaching Complex",
+        building_code: "STC",
+        room: "{}",
+        lat: 43.470726861787234, lng: -80.54329038680704,
+        tags: ["indoor", "public"],
+        bookable: true,
+        hours: "N/A",
+        notes: "N/A",
+    },
+    {
+        id: 4,
+        name: "N/A",
+        building: "J.R. Coutts Engineering Lecture Hall",
+        building_code: "RCH",
+        room: "N/A",
+        lat: 43.470327732902305, lng: -80.54075567120887,
+        tags: ["indoor"],
+        bookable: true,
+        hours: "N/A",
+        notes: "N/A",
+    },
+    {
+        id: 5,
+        name: "Marker Space Piano (Maybe?)",
+        building: "Carl Pollock Hall",
+        building_code: "CPH",
+        room: "CPH 3062",
+        lat: 43.470818260885274, lng: -80.53897187750974,
+        tags: ["indoor"],
+        bookable: true,
+        hours: "N/A",
+        notes: "N/A",
+    },
+    {
+        id: 10,
+        name: "The John & Helen Dick Family",
+        building: "Conrad Grebel University College",
+        building_code: "CGR",
+        room: "1114A",
+        lat: 43.46625926505543, lng: -80.54499628536715,
+        tags: ["indoor"],
+        bookable: true,
+        hours: "N/A",
+        notes: "N/A",
+    },
+    {
+        id: 11,
+        name: "The Marshman Family",
+        building: "Conrad Grebel University College",
+        building_code: "CGR",
+        room: "1114B",
+        lat: 43.46622608973279, lng: -80.54495070350515,
+        tags: ["indoor"],
+        bookable: true,
+        hours: "N/A",
+        notes: "N/A",
+    },
+    {
+        id: 12,
+        name: "The Dianne(Daniels) & David Conrath",
+        building: "Conrad Grebel University College",
+        building_code: "CGR",
+        room: "1114C",
+        lat: 43.46620454290088, lng: -80.54488899122555,
+        tags: ["indoor"],
+        bookable: true,
+        hours: "N/A",
+        notes: "N/A",
+    },
+    {
+        id: 14,
         name: "Music Program Pianos",
         building: "Conrad Grebel University College",
         building_code: "CGR",
-        room: "1112A, 1112B, 1112C",
+        room: "",
         lat: 43.4661278, lng: -80.5449946,
         tags: ["indoor"],
         bookable: true,
         hours: "Mon-Fri 8am-10pm, Sat 1-5pm",
         notes: "Multiple pianos available through Grebel's music program. Contact the music department for access.",
     },
-    {
-        id: 3,
-        name: "Marker Space Piano",
-        building: "Carl Pollock Hall",
-        building_code: "CPH",
-        room: "CPH 3062",
-        lat: 43.470791, lng: -80.53908,
-        tags: ["indoor"],
-        bookable: true,
-        hours: "No hours",
-        notes: "No notes.",
-    },
 ];
 const CENTER = [43.4710, -80.5430];
-
 
 // ****************************** INIT ******************************
 function initMap(divElement) {
@@ -67,31 +138,46 @@ function initMap(divElement) {
     return map;
 }
 
-function addClickPopup(map) {
+function clickPopupHTML(latlng, userLocationRef) {
+    let distHTML = "";
+    if (userLocationRef.current) {
+        distHTML = `<hr><div class="popup-distance">📍 ${formatDistance(getHaversineDistance(latlng.lat, latlng.lng, userLocationRef.current.lat, userLocationRef.current.lng))}</div>`;
+    }
+    
+    return `
+    <div>You clicked the map at:</div>
+    <div>Lat: ${latlng.lat}</div>
+    <div>Lng: ${latlng.lng}</div>
+    ${distHTML}`;
+}
+
+function addClickPopup(map, userLocationRef) {
     map.on("click", e => {
         L.popup()
             .setLatLng(e.latlng)
-            .setContent("You clicked the map at:<br>" + e.latlng.toString())
+            .setContent(clickPopupHTML(e.latlng, userLocationRef))
             .openOn(map);
     });
 }
 
-function buildPopupHTML(piano, userLocation = false) {
+function buildPopupHTML(piano, userLocation) {
     const distHTML = userLocation
-        ? `<div class="popup-distance">📍 ${1}</div>`
+        ? `<div class="popup-distance">📍 ${formatDistance(getHaversineDistance(piano.lat, piano.lng, userLocation.lat, userLocation.lng))}</div>`
         : `<div class="popup-no-location">Enable location to see distance</div>`;
 
     return `
-    <div class="popup-header">
-        <span class="popup-piano-emoji">🎹</span>
-        <div class="popup-name">${piano.name}</div>
-        <div class="popup-building">${piano.building} (${piano.building_code})</div>
-    </div>
-    <hr>
-    <div class="popup-body">
-        <div class="popup-detail"><span class="popup-detail-icon">🕐</span> ${piano.hours}</div>
-        <div class="popup-detail"><span class="popup-detail-icon">📝</span> ${piano.notes}</div>
-        ${distHTML}
+    <div class="popup">
+        <div class="popup-header">
+            <span class="popup-piano-emoji">🎹</span>
+            <div class="popup-name">${piano.name}</div>
+            <div class="popup-building">${piano.building} (${piano.building_code})</div>
+        </div>
+        <hr>
+        <div class="popup-body">
+            <div class="popup-detail">Time: ${piano.hours}</div>
+            <div class="popup-detail">Notes: ${piano.notes}</div>
+            ${distHTML}
+        </div>
     </div>`;
 }
 
@@ -107,45 +193,55 @@ function createPianoMarker(piano) {
     return L.marker([piano.lat, piano.lng], { icon });
 }
 
-function createPianoMarkers(map) {
+function createPianoMarkers(map, userLocation, markersRef) {
+    Object.values(markersRef.current).forEach(m => m.remove());
+    markersRef.current = {};
+
     PIANOS.forEach(piano => {
         const marker = createPianoMarker(piano);
-        marker.addTo(map).bindPopup(buildPopupHTML(piano));
-        marker.on("click", () => console.log(piano.id));
+        marker.addTo(map).bindPopup(buildPopupHTML(piano, userLocation));
+        marker.on("click", () => console.log(`Clicked on piano: ${piano.id}`));
     });
 }
 
-function init(mapRef, mapInstance) {
+function init(mapRef, mapInstance, userLocationRef) {
     const map = initMap(mapRef.current);
-    addClickPopup(map);
-    createPianoMarkers(map);
+    addClickPopup(map, userLocationRef);
 
     mapInstance.current = map; // save map for later changes
     return () => map.remove(); // cleanup: destroy the map if the component ever unmounts
 }
 
 // ****************************** GEOLOCATION ******************************
-function locateUser(setUserLocation, setLocStatus) {
+function locateUser(setUserLocation, setLocStatus, mapInstance, userMarkerRef) {
     navigator.geolocation.getCurrentPosition(
         position => {
             const { latitude: lat, longitude: lng } = position.coords;
             setUserLocation({ lat, lng });
             setLocStatus("active");
+            placeUserMarker(mapInstance, userMarkerRef, lat, lng);
         },
-        error => {
+        () => {
             console.error("Error: Location denied or unavailable");
             setLocStatus("denied");
         }
     );
 }
 
-function handleLocate(locStatus, setLocStatus, setUserLocation) {
+function deactivateLocation(userMarkerRef) {
+    if (userMarkerRef.current) return;
+    userMarkerRef.current.remove();
+    userMarkerRef.current = null;
+}
+
+function handleLocate(locStatus, setLocStatus, setUserLocation, mapInstance, userMarkerRef) {
     if (locStatus === "deactivated" || locStatus === "denied") {
         setLocStatus("loading");
-        locateUser(setUserLocation, setLocStatus);
+        locateUser(setUserLocation, setLocStatus, mapInstance, userMarkerRef);
     } else if (locStatus === "active") {
         setUserLocation(null);
         setLocStatus("deactivated");
+        deactivateLocation(userMarkerRef);
     }
 }
 
@@ -161,6 +257,20 @@ function getButtonContent(locStatus) {
     if (locStatus === "denied")  return "Location denied";
     if (locStatus === "deactivated") return "Find my location";
     return "Invalid status";
+}
+
+function placeUserMarker(mapInstance, userMarkerRef, lat, lng) {
+    if (userMarkerRef.current) userMarkerRef.current.remove();
+    
+    const icon = L.divIcon({
+        html: '<div class="user-marker"></div>',
+        className: "",
+        iconSize: [16, 16],
+        iconAnchor: [8, 8]
+    });
+    userMarkerRef.current = L.marker([lat, lng], { icon })
+        .addTo(mapInstance.current)
+        .bindPopup("<div class='user-popup'>You are here</div>");
 }
 
 // ****************************** DISTANCE ******************************
@@ -185,6 +295,15 @@ function getHaversineDistance(lat1, lng1, lat2, lng2) {
     return theta * r_earth;
 }
 
+function formatDistance(km) {
+    if (km < 1) {
+        return `${Math.round(km * 1000)}m away`;
+    }
+    return `${km.toFixed(1)}km away`;
+}
+
+// ****************************** UI ******************************
+
 // ****************************** REACT APP ******************************
 /*
 sources:
@@ -192,30 +311,49 @@ sources:
  - https://leafletjs.com/examples/quick-start/
 TODO:
  - Stop locating when you click the button and locStatus === "loading"
+ - add a filter function
 */
 function App() {
     const mapRef = useRef(null); // reference to the <div> Leaflet will live in
     const mapInstance = useRef(null); // Leaflet map object stored to mapInstance
+    const markersRef = useRef({});
 
     const [userLocation, setUserLocation] = useState(null); // stores user location information
+    const userLocationRef = useRef(null);
     const [locStatus, setLocStatus] = useState("deactivated"); // deactivated | loading | active | denied
+    const userMarkerRef = useRef(null); // stores the user's location marker
 
-    useEffect(() => init(mapRef, mapInstance), []); // this runs once after the component mounts (once the div exists in the DOM)
+    useEffect(() => init(mapRef, mapInstance, userLocationRef), []); // this runs once after the component mounts (once the div exists in the DOM)
 
     useEffect(() => {
+        if (!mapInstance.current) return;
+        userLocationRef.current = userLocation;
         console.log(`User location state: ${locStatus}\nUser location updated:`, userLocation);
+        createPianoMarkers(mapInstance.current, userLocation, markersRef);
     }, [userLocation]); // runs every time userLocation changes
     
     return (
-        <div style={{ width: "100%", height: "100%" }}>
-            <button 
-                    className={`location-btn ${getLocBtnClassName(locStatus)}`}
-                    onClick={() => handleLocate(locStatus, setLocStatus, setUserLocation)}>
-                <span className="dot"></span>
-                {getButtonContent(locStatus)}
-            </button>
-            <div ref={mapRef} style={{ width: "100%", height: "100%" }}></div>
-        </div>
+        <>
+            <header className="header">
+                <div className="title">uWaterloo Where Piano</div>
+                <button 
+                        className={`location-btn ${getLocBtnClassName(locStatus)}`}
+                        onClick={() => handleLocate(locStatus, setLocStatus, setUserLocation, mapInstance, userMarkerRef)}>
+                    <span className="dot"></span>
+                    {getButtonContent(locStatus)}
+                </button>
+            </header>
+
+            <div className="main">
+                <div className="sidebar">
+                    <div className="card">This is a card<br></br><span>lower text</span></div>
+                    <div className="card">This is a card2</div>
+                    <div className="card">This is a card3</div>
+                </div>
+
+                <div className="map" ref={mapRef}></div>
+            </div>
+        </>
     );
 }
 
