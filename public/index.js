@@ -7,58 +7,58 @@ const PIANOS = [
         name: "Piano Room A",
         building: "Student Life Centre",
         building_code: "SLC",
-        room: "{}",
+        room: "0000",
         lat: 43.4718576, lng: -80.5454194,
         tags: ["indoor"],
         bookable: true,
         hours: "Open 24 hours",
-        notes: "Two private piano rooms available for booking. Call the Turnkey Desk at the SLC to reserve.",
+        notes: "A piano room available for booking. Call the Turnkey Desk at the SLC to reserve.",
     },
     {
         id: 2,
         name: "Piano Room B",
         building: "Student Life Centre",
         building_code: "SLC",
-        room: "{}",
+        room: "0000",
         lat: 43.4718576, lng: -80.5454194,
         tags: ["indoor"],
         bookable: true,
         hours: "Open 24 hours",
-        notes: "Two private piano rooms available for booking. Call the Turnkey Desk at the SLC to reserve.",
+        notes: "A piano rooms available for booking. Call the Turnkey Desk at the SLC to reserve.",
     },
     {
         id: 3,
-        name: "Piano Room",
+        name: "Piano",
         building: "Science Teaching Complex",
         building_code: "STC",
-        room: "{}",
+        room: "0000",
         lat: 43.470726861787234, lng: -80.54329038680704,
         tags: ["indoor", "public"],
-        bookable: true,
+        bookable: false,
         hours: "N/A",
         notes: "N/A",
     },
     {
         id: 4,
-        name: "N/A",
+        name: "Piano",
         building: "J.R. Coutts Engineering Lecture Hall",
         building_code: "RCH",
-        room: "N/A",
+        room: "0000",
         lat: 43.470327732902305, lng: -80.54075567120887,
-        tags: ["indoor"],
-        bookable: true,
+        tags: ["indoor", "public"],
+        bookable: false,
         hours: "N/A",
         notes: "N/A",
     },
     {
         id: 5,
-        name: "Marker Space Piano (Maybe?)",
+        name: "Piano",
         building: "Carl Pollock Hall",
         building_code: "CPH",
-        room: "CPH 3062",
+        room: "3062",
         lat: 43.470818260885274, lng: -80.53897187750974,
         tags: ["indoor"],
-        bookable: true,
+        bookable: false,
         hours: "N/A",
         notes: "N/A",
     },
@@ -71,8 +71,8 @@ const PIANOS = [
         lat: 43.46625926505543, lng: -80.54499628536715,
         tags: ["indoor"],
         bookable: true,
-        hours: "N/A",
-        notes: "N/A",
+        hours: "Mon-Fri 8am-10pm, Sat 1-5pm",
+        notes: "For use by: current music studio students, current UW music ensemble participants, and music major/theory class practice only.",
     },
     {
         id: 11,
@@ -83,8 +83,8 @@ const PIANOS = [
         lat: 43.46622608973279, lng: -80.54495070350515,
         tags: ["indoor"],
         bookable: true,
-        hours: "N/A",
-        notes: "N/A",
+        hours: "Mon-Fri 8am-10pm, Sat 1-5pm",
+        notes: "For use by: current music studio students, current UW music ensemble participants, and music major/theory class practice only.",
     },
     {
         id: 12,
@@ -95,20 +95,68 @@ const PIANOS = [
         lat: 43.46620454290088, lng: -80.54488899122555,
         tags: ["indoor"],
         bookable: true,
-        hours: "N/A",
-        notes: "N/A",
+        hours: "Mon-Fri 8am-10pm, Sat 1-5pm",
+        notes: "For use by: current music studio students, current UW music ensemble participants, and music major/theory class practice only.",
     },
     {
-        id: 14,
+        id: 13,
         name: "Music Program Pianos",
         building: "Conrad Grebel University College",
         building_code: "CGR",
-        room: "",
-        lat: 43.4661278, lng: -80.5449946,
+        room: "0000",
+        lat: 43.46614814143143, lng: -80.54502241697979,
         tags: ["indoor"],
         bookable: true,
         hours: "Mon-Fri 8am-10pm, Sat 1-5pm",
-        notes: "Multiple pianos available through Grebel's music program. Contact the music department for access.",
+        notes: "Multiple pianos only available through enrollment of Grebel's music programs.",
+    },
+    {
+        id: 20,
+        name: "Residence Pianos",
+        building: "Claudette Miller Hall",
+        building_code: "CMH",
+        room: "0000",
+        lat: 43.470189347621016, lng: -80.53558118019038,
+        tags: ["indoor"],
+        bookable: true,
+        hours: "",
+        notes: "Pianos only acessable to residents.",
+    },
+    {
+        id: 21,
+        name: "Residence Pianos",
+        building: "Village 1",
+        building_code: "V1",
+        room: "0000",
+        lat: 43.47157139370661, lng: -80.54990938942693,
+        tags: ["indoor"],
+        bookable: true,
+        hours: "",
+        notes: "Pianos only acessable to residents.",
+    },
+    {
+        id: 22,
+        name: "Residence Pianos",
+        building: "Ron Eydt Village",
+        building_code: "REV",
+        room: "0000",
+        lat: 43.47029640865832, lng: -80.55418712122255,
+        tags: ["indoor"],
+        bookable: true,
+        hours: "",
+        notes: "Pianos only acessable to residents.",
+    },
+    {
+        id: 23,
+        name: "Residence Pianos",
+        building: "Mackenzie King Village",
+        building_code: "MKV",
+        room: "0000",
+        lat: 43.47138647387866, lng: -80.55203922120423,
+        tags: ["indoor"],
+        bookable: true,
+        hours: "",
+        notes: "Pianos only acessable to residents.",
     },
 ];
 const CENTER = [43.4710, -80.5430];
@@ -145,10 +193,12 @@ function clickPopupHTML(latlng, userLocationRef) {
     }
     
     return `
-    <div>You clicked the map at:</div>
-    <div>Lat: ${latlng.lat}</div>
-    <div>Lng: ${latlng.lng}</div>
-    ${distHTML}`;
+    <div class="click-popup">
+        <div>You clicked the map at:</div>
+        <div>Lat: ${latlng.lat}</div>
+        <div>Lng: ${latlng.lng}</div>
+        ${distHTML}
+    </div>`;
 }
 
 function addClickPopup(map, userLocationRef) {
@@ -184,10 +234,10 @@ function buildPopupHTML(piano, userLocation) {
 function createPianoMarker(piano) {
     const icon = L.divIcon({
         html: `<div class="piano-marker"><span>🎹</span></div>`,
-        className: "", // clears Leaflet's default white box styling
+        className: "",
         iconSize: [32, 32],
-        iconAnchor: [16, 32], // tip of the marker (horizontal center, bottom)
-        popupAnchor: [0, -34], // where the popup appears relative to the marker
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -34],
     });
 
     return L.marker([piano.lat, piano.lng], { icon });
@@ -208,8 +258,8 @@ function init(mapRef, mapInstance, userLocationRef) {
     const map = initMap(mapRef.current);
     addClickPopup(map, userLocationRef);
 
-    mapInstance.current = map; // save map for later changes
-    return () => map.remove(); // cleanup: destroy the map if the component ever unmounts
+    mapInstance.current = map;
+    return () => map.remove();
 }
 
 // ****************************** GEOLOCATION ******************************
@@ -274,6 +324,7 @@ function placeUserMarker(mapInstance, userMarkerRef, lat, lng) {
 }
 
 // ****************************** DISTANCE ******************************
+// https://en.wikipedia.org/wiki/Haversine_formula
 function haversine(lat1, lng1, lat2, lng2) {
     // hav(theta) = sin^2(theta/2)
     // hav(theta) = hav(delta lat) + cos(lat1) * cos(lat2) * (delta lng)
@@ -303,6 +354,21 @@ function formatDistance(km) {
 }
 
 // ****************************** UI ******************************
+function PianoCard({piano}) {
+    return (
+        <div className="piano-card">
+            <div className="card-name">{piano.name}</div>
+            <div className="card-building">{piano.building}</div>
+            <div className="card-room">{piano.building_code} {piano.room}</div>
+            <div className="card-tags">
+                {piano.tags.map(tag => (
+                    <span key={tag} className="tag">{tag}</span>
+                ))}
+                {piano.bookable && <span className="tag tag-bookable">bookable</span>}
+            </div>
+        </div>
+    );
+}
 
 // ****************************** REACT APP ******************************
 /*
@@ -314,11 +380,11 @@ TODO:
  - add a filter function
 */
 function App() {
-    const mapRef = useRef(null); // reference to the <div> Leaflet will live in
-    const mapInstance = useRef(null); // Leaflet map object stored to mapInstance
+    const mapRef = useRef(null);
+    const mapInstance = useRef(null);
     const markersRef = useRef({});
 
-    const [userLocation, setUserLocation] = useState(null); // stores user location information
+    const [userLocation, setUserLocation] = useState(null);
     const userLocationRef = useRef(null);
     const [locStatus, setLocStatus] = useState("deactivated"); // deactivated | loading | active | denied
     const userMarkerRef = useRef(null); // stores the user's location marker
@@ -346,9 +412,9 @@ function App() {
 
             <div className="main">
                 <div className="sidebar">
-                    <div className="card">This is a card<br></br><span>lower text</span></div>
-                    <div className="card">This is a card2</div>
-                    <div className="card">This is a card3</div>
+                    {PIANOS.map(piano => (
+                        <PianoCard key={piano.id} piano={piano} />
+                    ))}
                 </div>
 
                 <div className="map" ref={mapRef}></div>
