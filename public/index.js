@@ -9,8 +9,7 @@ const PIANOS = [
         building_code: "SLC",
         room: "0000",
         lat: 43.4718576, lng: -80.5454194,
-        tags: ["indoor"],
-        bookable: true,
+        tags: ["indoor", "bookable"],
         hours: "Open 24 hours",
         notes: "A piano room available for booking. Call the Turnkey Desk at the SLC to reserve.",
     },
@@ -21,8 +20,7 @@ const PIANOS = [
         building_code: "SLC",
         room: "0000",
         lat: 43.4718576, lng: -80.5454194,
-        tags: ["indoor"],
-        bookable: true,
+        tags: ["indoor", "bookable"],
         hours: "Open 24 hours",
         notes: "A piano rooms available for booking. Call the Turnkey Desk at the SLC to reserve.",
     },
@@ -34,7 +32,6 @@ const PIANOS = [
         room: "0000",
         lat: 43.470726861787234, lng: -80.54329038680704,
         tags: ["indoor", "public"],
-        bookable: false,
         hours: "N/A",
         notes: "N/A",
     },
@@ -46,7 +43,6 @@ const PIANOS = [
         room: "0000",
         lat: 43.470327732902305, lng: -80.54075567120887,
         tags: ["indoor", "public"],
-        bookable: false,
         hours: "N/A",
         notes: "N/A",
     },
@@ -58,7 +54,6 @@ const PIANOS = [
         room: "3062",
         lat: 43.470818260885274, lng: -80.53897187750974,
         tags: ["indoor"],
-        bookable: false,
         hours: "N/A",
         notes: "N/A",
     },
@@ -69,8 +64,7 @@ const PIANOS = [
         building_code: "CGR",
         room: "1114A",
         lat: 43.46625926505543, lng: -80.54499628536715,
-        tags: ["indoor"],
-        bookable: true,
+        tags: ["indoor", "bookable"],
         hours: "Mon-Fri 8am-10pm, Sat 1-5pm",
         notes: "For use by: current music studio students, current UW music ensemble participants, and music major/theory class practice only.",
     },
@@ -81,8 +75,7 @@ const PIANOS = [
         building_code: "CGR",
         room: "1114B",
         lat: 43.46622608973279, lng: -80.54495070350515,
-        tags: ["indoor"],
-        bookable: true,
+        tags: ["indoor", "bookable"],
         hours: "Mon-Fri 8am-10pm, Sat 1-5pm",
         notes: "For use by: current music studio students, current UW music ensemble participants, and music major/theory class practice only.",
     },
@@ -93,8 +86,7 @@ const PIANOS = [
         building_code: "CGR",
         room: "1114C",
         lat: 43.46620454290088, lng: -80.54488899122555,
-        tags: ["indoor"],
-        bookable: true,
+        tags: ["indoor", "bookable"],
         hours: "Mon-Fri 8am-10pm, Sat 1-5pm",
         notes: "For use by: current music studio students, current UW music ensemble participants, and music major/theory class practice only.",
     },
@@ -105,8 +97,7 @@ const PIANOS = [
         building_code: "CGR",
         room: "0000",
         lat: 43.46614814143143, lng: -80.54502241697979,
-        tags: ["indoor"],
-        bookable: true,
+        tags: ["indoor", "bookable"],
         hours: "Mon-Fri 8am-10pm, Sat 1-5pm",
         notes: "Multiple pianos only available through enrollment of Grebel's music programs.",
     },
@@ -117,8 +108,7 @@ const PIANOS = [
         building_code: "CMH",
         room: "0000",
         lat: 43.470189347621016, lng: -80.53558118019038,
-        tags: ["indoor"],
-        bookable: true,
+        tags: ["indoor", "bookable"],
         hours: "",
         notes: "Pianos only acessable to residents.",
     },
@@ -129,8 +119,7 @@ const PIANOS = [
         building_code: "V1",
         room: "0000",
         lat: 43.47157139370661, lng: -80.54990938942693,
-        tags: ["indoor"],
-        bookable: true,
+        tags: ["indoor", "bookable"],
         hours: "",
         notes: "Pianos only acessable to residents.",
     },
@@ -141,8 +130,7 @@ const PIANOS = [
         building_code: "REV",
         room: "0000",
         lat: 43.47029640865832, lng: -80.55418712122255,
-        tags: ["indoor"],
-        bookable: true,
+        tags: ["indoor", "bookable"],
         hours: "",
         notes: "Pianos only acessable to residents.",
     },
@@ -153,8 +141,7 @@ const PIANOS = [
         building_code: "MKV",
         room: "0000",
         lat: 43.47138647387866, lng: -80.55203922120423,
-        tags: ["indoor"],
-        bookable: true,
+        tags: ["indoor", "bookable"],
         hours: "",
         notes: "Pianos only acessable to residents.",
     },
@@ -370,6 +357,23 @@ function PianoCard({piano}) {
     );
 }
 
+function isMatch(s, text) {
+    return s.toLowerCase().trim().includes(text);
+}
+
+function updateCards(searchText) {
+    let visiblePianos = PIANOS.filter(piano => {
+        const text = searchText.toLowerCase().trim();
+
+        return isMatch(piano.name, text)
+            || isMatch(piano.building, text)
+            || isMatch(piano.building_code, text)
+            || isMatch(piano.room, text)
+            || piano.tags.some(tag => isMatch(tag, text));
+    });
+    return visiblePianos;
+}
+
 // ****************************** REACT APP ******************************
 /*
 sources:
@@ -387,7 +391,10 @@ function App() {
     const [userLocation, setUserLocation] = useState(null);
     const userLocationRef = useRef(null);
     const [locStatus, setLocStatus] = useState("deactivated"); // deactivated | loading | active | denied
-    const userMarkerRef = useRef(null); // stores the user's location marker
+    const userMarkerRef = useRef(null);
+
+    const [searchText, setSearchText] = useState("");
+    const visiblePianos = updateCards(searchText);
 
     useEffect(() => init(mapRef, mapInstance, userLocationRef), []); // this runs once after the component mounts (once the div exists in the DOM)
 
@@ -412,15 +419,21 @@ function App() {
 
             <div className="main">
                 <div className="sidebar">
-                    {PIANOS.map(piano => (
-                        <PianoCard key={piano.id} piano={piano} />
+                    <div className="searchbar">
+                        <input type="text" placeholder="Search..." onChange={e => setSearchText(e.target.value)}/>
+                        <div className="buttonbar">
+                            <button>Filter</button>
+                        </div>
+                    </div>
+                    {visiblePianos.map(piano => (
+                        <PianoCard key={piano.id} piano={piano}/>
                     ))}
                 </div>
 
-                <div className="map" ref={mapRef}></div>
+                <div className="map" ref={mapRef}/>
             </div>
         </>
     );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);

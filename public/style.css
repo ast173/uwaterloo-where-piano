@@ -3,7 +3,10 @@
     --gold-light: #f0d080;
     --green: #4a9e7a;
     --red: #e05555;
-
+    
+    /* --bg-dark: #0e0d0b;
+    --bg-mid: #1a1814;
+    --bg-light: #242018; */
     --bg-dark: #0b0c0e;
     --bg-mid: #14161a;
     --bg-light: #181c24;
@@ -13,6 +16,9 @@
 
     --text: #e8e0cc;
     --text-dark: #8a8070;
+
+    --font: 'DM Sans', sans-serif;
+    --btn-to-gold-transition: all 0.18s ease;
 }
 
 /* GENERAL */
@@ -51,6 +57,7 @@ body {
     color: var(--gold);
     font-size: 18pt;
     font-weight: bold;
+    margin-right: 12px;
     /* flex: 1; */
 }
 
@@ -67,10 +74,59 @@ body {
     display: flex;
     flex-direction: column;
     background-color: var(--bg-light);
-    width: 15%;
+    width: 20%;
     height: 100%;
     overflow-y: auto;
     padding: 8px;
+}
+
+.searchbar {
+    display: flex;
+    flex-direction: column;
+
+    background-color: var(--bg-mid);
+    color: var(--text);
+
+    border: 1px solid var(--border-yellow);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    gap: 4px;
+}
+
+.searchbar input {
+    background-color: var(--bg-light);
+    color: var(--text);
+    
+    border-radius: 8px;
+    font-family: var(--font);
+    padding: 4px 8px;
+
+    border-color: var(--border-blue);
+    width: 100%;
+}
+
+.buttonbar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.buttonbar button {
+    background-color: var(--border-blue);
+    color: var(--text);
+    font-family: var(--font);
+
+    border: 1px solid var(--bg-dark);
+    border-radius: 16px;
+    padding: 8px 12px;
+}
+
+.buttonbar button:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    cursor: pointer;
+    transition: var(--btn-to-gold-transition);
 }
 
 .piano-card {
@@ -139,7 +195,7 @@ body {
 
 /* MAP */
 .map {
-    width: 85%;
+    width: 80%;
     height: 100%;
 }
 
@@ -215,7 +271,7 @@ body {
     gap: 8px;
     padding: 8px 16px;
     cursor: pointer;
-    transition: all 0.18s ease;
+    transition: var(--btn-to-gold-transition);
 }
 
 .location-btn:hover {
