@@ -10,6 +10,7 @@
     --bg-dark: #0b0c0e;
     --bg-mid: #14161a;
     --bg-light: #181c24;
+    --bg-lighter: #202932;
 
     --border-yellow: #333020;
     --border-blue: #273741;
@@ -132,17 +133,27 @@ body {
 }
 
 .piano-card {
+    text-align: left;
     background-color: var(--bg-light);
     color: var(--text);
 
+    width: 100%;
     border: 1px solid var(--border-blue);
     border-radius: 8px;
     padding: 12px 16px;
     margin-bottom: 8px;
+    transition: all 0.18s ease;
+}
+
+.piano-card:hover {
+    background-color: var(--bg-lighter);
+    /* color: var(--gold); */
+    border: 1px solid var(--gold);
+    cursor: pointer;
 }
 
 .card-name {
-    font-size: larger;
+    font-size: 1.2rem;
 }
 
 .card-building, .card-room {
@@ -168,6 +179,19 @@ body {
 .tag-bookable {
     background-color: rgba(74, 158, 122, 0.15);
     color: var(--green);
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--text-dark);
+    border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--gold);
 }
 
 /* LEAFLET OVERIDES */
@@ -248,6 +272,10 @@ body {
 
 .popup-no-location {
     color: var(--text-dark);
+}
+
+.click-popup {
+    font: var(--font);
 }
 
 .click-popup, .user-popup {

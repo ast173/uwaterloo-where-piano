@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { createPianoMarkers, init } from "./init.js";
-import { handleLocate, getLocBtnClassName, getButtonContent } from "./geolocation.js";
-import { updateCards } from "./ui.js";
-import PianoCard from "./PianoCard.js";
-import { Coord } from "./Coord.ts";
+import { init } from "./init.ts";
+import { createPianoMarkers } from "./pianoMarkers.ts";
+import { handleLocate, getLocBtnClassName, getButtonContent } from "./geolocation.ts";
+import { updateCards } from "./ui.ts";
+import PianoCard from "./PianoCard.tsx";
+import { Coord } from "./interfaces.ts";
 import { LocStatus } from "./types.ts";
 
 // ============================== REACT APP ==============================
@@ -14,13 +15,26 @@ sources:
 TODO:
  - Stop locating when you click the button and locStatus === "loading"
  - Make already open popups update if user turns location on/off
+
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
 npm run dev
+
+Tag meanings:
+indoor: inside a building
+outdoor: outside a building
+room: in a dedicated piano room (may or may not be bookable)
+public/common: in a public hallway or common area (free to any)
+bookable: can be reserved in advance
+id required:  must give id for keys
+
+mutually exclusive:
+indoor/outdoor
+room/public
 */
 export default function App() {
     const mapRef = useRef<HTMLDivElement | null>(null);
     const mapInstance = useRef<L.Map | null>(null);
-    const markersRef = useRef<L.Marker[]>([]); // useRef<Record<number, L.Marker>>({});
+    const markersRef = useRef<Record<number, L.Marker>>({});
 
     const [userLocation, setUserLocation] = useState<Coord | null>(null);
     const userLocationRef = useRef<Coord | null>(null);

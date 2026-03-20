@@ -1,19 +1,8 @@
-import { Piano } from "./Piano.ts";
-
-export { CENTER, PIANOS };
+import { Piano } from "./interfaces.ts";
 
 // ============================== UTIL ==============================
-/*
-Tag meanings:
-indoor: the piano is inside a building
-outdoor: the piano is outside
-room: the piano is in a dedicated piano room
-public: the piano can be played by anyone and it not in a dedicated room
-bookable: the piano must be bookable
-bookable: the piano must be bookable
-*/
-const CENTER: [number, number] = [43.4710, -80.5430];
-const PIANOS: Piano[] = [
+export const CENTER: [number, number] = [43.4710, -80.5430];
+export const PIANOS: Piano[] = [
     {
         id: 1,
         name: "Piano Room",
@@ -104,7 +93,7 @@ const PIANOS: Piano[] = [
     },
     {
         id: 12,
-        name: "The Dianne(Daniels) & David Conrath",
+        name: "The Dianne (Daniels) & David Conrath",
         building: "Conrad Grebel University College",
         building_code: "CGR",
         room: "1114C",

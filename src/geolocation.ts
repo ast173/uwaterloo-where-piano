@@ -1,10 +1,9 @@
-export { locateUser, handleLocate, getLocBtnClassName, getButtonContent };
-import { LocStatus, Setter } from "./types.ts";
 import L from 'leaflet';
-import { Coord } from "./Coord.ts";
+import { LocStatus, Setter } from "./types.ts";
+import { Coord } from "./interfaces.ts";
 
 // ============================== GEOLOCATION ==============================
-function locateUser(setUserLocation: Setter<Coord | null>,
+export function locateUser(setUserLocation: Setter<Coord | null>,
                     setLocStatus: Setter<LocStatus>,
                     mapInstance: React.RefObject<L.Map | null>,
                     userMarkerRef: React.RefObject<L.Marker | null>): void {
@@ -29,7 +28,7 @@ function deactivateLocation(userMarkerRef: React.RefObject<L.Marker | null>): vo
     userMarkerRef.current = null;
 }
 
-function handleLocate(locStatus: LocStatus,
+export function handleLocate(locStatus: LocStatus,
                         setLocStatus: Setter<LocStatus>,
                         setUserLocation: Setter<Coord | null>,
                         mapInstance: React.RefObject<L.Map | null>,
@@ -45,18 +44,17 @@ function handleLocate(locStatus: LocStatus,
     }
 }
 
-function getLocBtnClassName(locStatus: LocStatus) {
+export function getLocBtnClassName(locStatus: LocStatus): string {
     if (locStatus === "active") return "active";
     if (locStatus === "denied") return "error";
     return "";
 }
 
-function getButtonContent(locStatus: LocStatus) {
+export function getButtonContent(locStatus: LocStatus): string {
     if (locStatus === "loading") return "Locating...";
-    if (locStatus === "active")  return "Location on";
-    if (locStatus === "denied")  return "Location denied";
-    if (locStatus === "deactivated") return "Find my location";
-    return "Invalid status";
+    if (locStatus === "active") return "Location on";
+    if (locStatus === "denied") return "Location denied";
+    return "Find my location";
 }
 
 function placeUserMarker(mapInstance: React.RefObject<L.Map | null>,

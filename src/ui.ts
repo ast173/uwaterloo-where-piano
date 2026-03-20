@@ -1,14 +1,12 @@
-export { updateCards };
-
 import { PIANOS } from "./util.ts";
-import { Piano } from "./Piano.ts";
+import { Piano } from "./interfaces.ts";
 
 // ============================== UI ==============================
 function isMatch(s: string, text: string): boolean {
     return s.toLowerCase().trim().includes(text);
 }
 
-function updateCards(searchText: string): Piano[] {
+export function updateCards(searchText: string): Piano[] {
     let visiblePianos = PIANOS.filter(piano => {
         const text: string = searchText.toLowerCase().trim();
 
