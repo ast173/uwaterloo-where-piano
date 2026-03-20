@@ -1,29 +1,40 @@
+import { Piano } from "./Piano.ts";
+
 export { CENTER, PIANOS };
 
-const CENTER = [43.4710, -80.5430];
-
-const PIANOS = [
+// ============================== UTIL ==============================
+/*
+Tag meanings:
+indoor: the piano is inside a building
+outdoor: the piano is outside
+room: the piano is in a dedicated piano room
+public: the piano can be played by anyone and it not in a dedicated room
+bookable: the piano must be bookable
+bookable: the piano must be bookable
+*/
+const CENTER: [number, number] = [43.4710, -80.5430];
+const PIANOS: Piano[] = [
     {
         id: 1,
-        name: "Piano Room A",
+        name: "Piano Room",
         building: "Student Life Centre",
         building_code: "SLC",
-        room: "0000",
-        lat: 43.4718576, lng: -80.5454194,
-        tags: ["indoor", "bookable"],
-        hours: "Open 24 hours",
-        notes: "A piano room available for booking. Call the Turnkey Desk at the SLC to reserve.",
+        room: "2103",
+        lat: 43.47156679604409, lng: -80.54502244430466,
+        tags: ["indoor", "bookable", "room"],
+        hours: "Bookable 7am-10pm",
+        notes: "A piano room available for booking. Go to Turnkey Desk at the SLC to reserve.",
     },
     {
         id: 2,
-        name: "Piano Room B",
+        name: "Piano Room",
         building: "Student Life Centre",
         building_code: "SLC",
-        room: "0000",
-        lat: 43.4718576, lng: -80.5454194,
-        tags: ["indoor", "bookable"],
-        hours: "Open 24 hours",
-        notes: "A piano rooms available for booking. Call the Turnkey Desk at the SLC to reserve.",
+        room: "2104",
+        lat: 43.47154041897933, lng: -80.54508923708586,
+        tags: ["indoor", "bookable", "room"],
+        hours: "Bookable 7am-10pm",
+        notes: "A piano rooms available for booking. Go to Turnkey Desk at the SLC to reserve.",
     },
     {
         id: 3,
@@ -55,6 +66,17 @@ const PIANOS = [
         room: "3062",
         lat: 43.470818260885274, lng: -80.53897187750974,
         tags: ["indoor"],
+        hours: "N/A",
+        notes: "N/A",
+    },
+    {
+        id: 6,
+        name: "Piano",
+        building: "HLTH Expansion Building",
+        building_code: "EXP",
+        room: "0000",
+        lat: 43.47339936447072, lng: -80.54587770120747,
+        tags: ["indoor", "public"],
         hours: "N/A",
         notes: "N/A",
     },

@@ -1,29 +1,29 @@
 export { getHaversineDistance, formatDistance };
 
-// ****************************** DISTANCE ******************************
+// ============================== DISTANCE ==============================
 // https://en.wikipedia.org/wiki/Haversine_formula
-function haversine(lat1, lng1, lat2, lng2) {
+function haversine(lat1: number, lng1: number, lat2: number, lng2: number): number {
     // hav(theta) = sin^2(theta/2)
     // hav(theta) = hav(delta lat) + cos(lat1) * cos(lat2) * (delta lng)
     return (1 - Math.cos(toRadians(lat1 - lat2)) + Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * (1 - Math.cos(toRadians(lng1 - lng2)))) / 2.0;
 }
 
-function inverseHaversine(lat1, lng1, lat2, lng2) {
+function inverseHaversine(lat1: number, lng1: number, lat2: number, lng2: number): number {
     // theta = 2 * arcsin(sqrt(hav(theta)))
     return 2 * Math.asin(Math.sqrt(haversine(lat1, lng1, lat2, lng2)));
 }
 
-function toRadians(theta) {
+function toRadians(theta: number): number {
     return theta * Math.PI / 180.0;
 }
 
-function getHaversineDistance(lat1, lng1, lat2, lng2) {
+function getHaversineDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
     const r_earth = 6371; // km
     let theta = inverseHaversine(lat1, lng1, lat2, lng2);
     return theta * r_earth;
 }
 
-function formatDistance(km) {
+function formatDistance(km: number): string {
     if (km < 1) {
         return `${Math.round(km * 1000)}m away`;
     }

@@ -1,11 +1,13 @@
 import L from "leaflet";
 import { CENTER, PIANOS } from "./util.js";
-import { getHaversineDistance, formatDistance } from "./dist.js";
+import { getHaversineDistance, formatDistance } from "./distance.js";
+import { Coord } from "./Coord.ts";
+import { Piano } from "./Piano.ts";
 
 export { createPianoMarkers, init };
 
-// ****************************** INIT ******************************
-function initMap(divElement) {
+// ============================== INIT ==============================
+function initMap(divElement: HTMLDivElement): L.Map {
     const map = L.map(divElement, {
         center: CENTER,
         zoom: 16,
@@ -29,7 +31,7 @@ function initMap(divElement) {
     return map;
 }
 
-function clickPopupHTML(latlng, userLocationRef) {
+function clickPopupHTML(latlng: Coord, userLocationRef: React.RefObject<Coord | null>) {
     let distHTML = "";
     if (userLocationRef.current) {
         distHTML = `<hr><div class="popup-distance">📍 ${formatDistance(getHaversineDistance(latlng.lat, latlng.lng, userLocationRef.current.lat, userLocationRef.current.lng))}</div>`;
@@ -44,7 +46,7 @@ function clickPopupHTML(latlng, userLocationRef) {
     </div>`;
 }
 
-function addClickPopup(map, userLocationRef) {
+function addClickPopup(map: L.Map, userLocationRef: React.RefObject<Coord | null>) {
     map.on("click", e => {
         L.popup()
             .setLatLng(e.latlng)
@@ -53,7 +55,7 @@ function addClickPopup(map, userLocationRef) {
     });
 }
 
-function buildPopupHTML(piano, userLocation) {
+function buildPopupHTML(piano: Piano, userLocation: Coord | null) {
     const distHTML = userLocation
         ? `<div class="popup-distance">📍 ${formatDistance(getHaversineDistance(piano.lat, piano.lng, userLocation.lat, userLocation.lng))}</div>`
         : `<div class="popup-no-location">Enable location to see distance</div>`;
@@ -74,7 +76,7 @@ function buildPopupHTML(piano, userLocation) {
     </div>`;
 }
 
-function createPianoMarker(piano) {
+function createPianoMarker(piano: Piano) {
     const icon = L.divIcon({
         html: `<div class="piano-marker"><span>🎹</span></div>`,
         className: "",
@@ -86,9 +88,12 @@ function createPianoMarker(piano) {
     return L.marker([piano.lat, piano.lng], { icon });
 }
 
-function createPianoMarkers(map, userLocation, markersRef) {
+function createPianoMarkers(map: L.Map,
+                            userLocation: Coord | null,
+                            markersRef: React.RefObject<L.Marker[]>) {
+
     Object.values(markersRef.current).forEach(m => m.remove());
-    markersRef.current = {};
+    markersRef.current.length = 0;
 
     PIANOS.forEach(piano => {
         const marker = createPianoMarker(piano);
@@ -97,10 +102,13 @@ function createPianoMarkers(map, userLocation, markersRef) {
     });
 }
 
-function init(mapRef, mapInstance, userLocationRef) {
-    const map = initMap(mapRef.current);
+function init(mapRef: React.RefObject<HTMLDivElement | null>,
+                mapInstance: React.RefObject<L.Map | null>,
+                userLocationRef: React.RefObject<Coord | null>): () => void {
+
+    const map: L.Map = initMap(mapRef.current!);
     addClickPopup(map, userLocationRef);
 
     mapInstance.current = map;
-    return () => map.remove();
+    return () => { map.remove(); };
 }

@@ -1,30 +1,33 @@
 import { useEffect, useRef, useState } from "react";
-import { PIANOS } from "./util.js";
 import { createPianoMarkers, init } from "./init.js";
-import { locateUser, handleLocate, getLocBtnClassName, getButtonContent } from "./geolocation.js";
+import { handleLocate, getLocBtnClassName, getButtonContent } from "./geolocation.js";
 import { updateCards } from "./ui.js";
-import { getHaversineDistance, formatDistance } from "./dist.js";
-import PianoCard from "./PianoCard.jsx";
+import PianoCard from "./PianoCard.js";
+import { Coord } from "./Coord.ts";
+import { LocStatus } from "./types.ts";
 
-// ****************************** REACT APP ******************************
+// ============================== REACT APP ==============================
 /*
 sources:
  - https://leafletjs.com/
  - https://leafletjs.com/examples/quick-start/
 TODO:
  - Stop locating when you click the button and locStatus === "loading"
+ - Make already open popups update if user turns location on/off
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+npm run dev
 */
 export default function App() {
-    const mapRef = useRef(null);
-    const mapInstance = useRef(null);
-    const markersRef = useRef({});
+    const mapRef = useRef<HTMLDivElement | null>(null);
+    const mapInstance = useRef<L.Map | null>(null);
+    const markersRef = useRef<L.Marker[]>([]); // useRef<Record<number, L.Marker>>({});
 
-    const [userLocation, setUserLocation] = useState(null);
-    const userLocationRef = useRef(null);
-    const [locStatus, setLocStatus] = useState("deactivated"); // deactivated | loading | active | denied
-    const userMarkerRef = useRef(null);
+    const [userLocation, setUserLocation] = useState<Coord | null>(null);
+    const userLocationRef = useRef<Coord | null>(null);
+    const [locStatus, setLocStatus] = useState<LocStatus>("deactivated");
+    const userMarkerRef = useRef<L.Marker | null>(null);
 
-    const [searchText, setSearchText] = useState("");
+    const [searchText, setSearchText] = useState<string>("");
     const visiblePianos = updateCards(searchText);
 
     useEffect(() => init(mapRef, mapInstance, userLocationRef), []); // this runs once after the component mounts (once the div exists in the DOM)
@@ -51,17 +54,17 @@ export default function App() {
             <div className="main">
                 <div className="sidebar">
                     <div className="searchbar">
-                        <input type="text" placeholder="Search..." onChange={e => setSearchText(e.target.value)}/>
+                        <input type="text" placeholder="Search..." onChange={e => setSearchText(e.target.value)} />
                         <div className="buttonbar">
                             <button>Filter</button>
                         </div>
                     </div>
                     {visiblePianos.map(piano => (
-                        <PianoCard key={piano.id} piano={piano}/>
+                        <PianoCard key={piano.id} piano={piano} />
                     ))}
                 </div>
 
-                <div className="map" ref={mapRef}/>
+                <div className="map" ref={mapRef} />
             </div>
         </>
     );

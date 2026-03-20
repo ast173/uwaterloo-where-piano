@@ -1,7 +1,14 @@
 export { locateUser, handleLocate, getLocBtnClassName, getButtonContent };
+import { LocStatus, Setter } from "./types.ts";
+import L from 'leaflet';
+import { Coord } from "./Coord.ts";
 
-// ****************************** GEOLOCATION ******************************
-function locateUser(setUserLocation, setLocStatus, mapInstance, userMarkerRef) {
+// ============================== GEOLOCATION ==============================
+function locateUser(setUserLocation: Setter<Coord | null>,
+                    setLocStatus: Setter<LocStatus>,
+                    mapInstance: React.RefObject<L.Map | null>,
+                    userMarkerRef: React.RefObject<L.Marker | null>): void {
+
     navigator.geolocation.getCurrentPosition(
         position => {
             const { latitude: lat, longitude: lng } = position.coords;
@@ -16,13 +23,18 @@ function locateUser(setUserLocation, setLocStatus, mapInstance, userMarkerRef) {
     );
 }
 
-function deactivateLocation(userMarkerRef) {
-    if (userMarkerRef.current) return;
+function deactivateLocation(userMarkerRef: React.RefObject<L.Marker | null>): void {
+    if (!userMarkerRef.current) return;
     userMarkerRef.current.remove();
     userMarkerRef.current = null;
 }
 
-function handleLocate(locStatus, setLocStatus, setUserLocation, mapInstance, userMarkerRef) {
+function handleLocate(locStatus: LocStatus,
+                        setLocStatus: Setter<LocStatus>,
+                        setUserLocation: Setter<Coord | null>,
+                        mapInstance: React.RefObject<L.Map | null>,
+                        userMarkerRef: React.RefObject<L.Marker | null>): void {
+
     if (locStatus === "deactivated" || locStatus === "denied") {
         setLocStatus("loading");
         locateUser(setUserLocation, setLocStatus, mapInstance, userMarkerRef);
@@ -33,13 +45,13 @@ function handleLocate(locStatus, setLocStatus, setUserLocation, mapInstance, use
     }
 }
 
-function getLocBtnClassName(locStatus) {
+function getLocBtnClassName(locStatus: LocStatus) {
     if (locStatus === "active") return "active";
     if (locStatus === "denied") return "error";
     return "";
 }
 
-function getButtonContent(locStatus) {
+function getButtonContent(locStatus: LocStatus) {
     if (locStatus === "loading") return "Locating...";
     if (locStatus === "active")  return "Location on";
     if (locStatus === "denied")  return "Location denied";
@@ -47,7 +59,11 @@ function getButtonContent(locStatus) {
     return "Invalid status";
 }
 
-function placeUserMarker(mapInstance, userMarkerRef, lat, lng) {
+function placeUserMarker(mapInstance: React.RefObject<L.Map | null>,
+                            userMarkerRef: React.RefObject<L.Marker | null>,
+                            lat: number,
+                            lng: number): void {
+
     if (userMarkerRef.current) userMarkerRef.current.remove();
     
     const icon = L.divIcon({
@@ -57,6 +73,6 @@ function placeUserMarker(mapInstance, userMarkerRef, lat, lng) {
         iconAnchor: [8, 8]
     });
     userMarkerRef.current = L.marker([lat, lng], { icon })
-        .addTo(mapInstance.current)
+        .addTo(mapInstance.current!)
         .bindPopup("<div class='user-popup'>You are here</div>");
 }

@@ -1,15 +1,16 @@
 export { updateCards };
 
-import { PIANOS } from "./util.js";
+import { PIANOS } from "./util.ts";
+import { Piano } from "./Piano.ts";
 
-// ****************************** UI ******************************
-function isMatch(s, text) {
+// ============================== UI ==============================
+function isMatch(s: string, text: string): boolean {
     return s.toLowerCase().trim().includes(text);
 }
 
-function updateCards(searchText) {
+function updateCards(searchText: string): Piano[] {
     let visiblePianos = PIANOS.filter(piano => {
-        const text = searchText.toLowerCase().trim();
+        const text: string = searchText.toLowerCase().trim();
 
         return isMatch(piano.name, text)
             || isMatch(piano.building, text)
@@ -17,5 +18,6 @@ function updateCards(searchText) {
             || isMatch(piano.room, text)
             || piano.tags.some(tag => isMatch(tag, text));
     });
+    
     return visiblePianos;
 }

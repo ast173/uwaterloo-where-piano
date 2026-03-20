@@ -1,4 +1,6 @@
-export default function PianoCard({piano}) {
+import { Piano } from "./Piano";
+
+export default function PianoCard({piano}: {piano: Piano}) {
     return (
         <div className="piano-card">
             <div className="card-name">{piano.name}</div>
