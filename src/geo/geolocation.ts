@@ -1,6 +1,6 @@
-import L from 'leaflet';
-import { LocStatus, Setter } from "./types.ts";
-import { Coord } from "./interfaces.ts";
+import L from "leaflet";
+import { LocStatus, Setter } from "../util/types.ts";
+import { Coord } from "../util/interfaces.ts";
 
 // ============================== GEOLOCATION ==============================
 export function locateUser(setUserLocation: Setter<Coord | null>,
@@ -12,11 +12,14 @@ export function locateUser(setUserLocation: Setter<Coord | null>,
         position => {
             const { latitude: lat, longitude: lng } = position.coords;
             setUserLocation({ lat, lng });
+            console.log("Location active");
             setLocStatus("active");
             placeUserMarker(mapInstance, userMarkerRef, lat, lng);
         },
-        () => {
+        e => {
             console.error("Error: Location denied or unavailable");
+            console.error("Error code:", e.code);
+            console.error("Error message:", e.message);
             setLocStatus("denied");
         }
     );

@@ -1,11 +1,11 @@
 import L from "leaflet";
-import { PIANOS } from "./util.js";
-import { getHaversineDistance, formatDistance } from "./distance.js";
-import { Coord, Piano } from "./interfaces.ts";
+import { PIANOS } from "./util/util.js";
+import { getHaversineDistance, formatDistance } from "./geo/distance.js";
+import { Coord, Piano } from "./util/interfaces.ts";
 
 function buildPopupHTML(piano: Piano, userLocation: Coord | null) {
     const distHTML = userLocation
-        ? `<div class="popup-distance">${formatDistance(getHaversineDistance(piano.lat, piano.lng, userLocation.lat, userLocation.lng))}</div>`
+        ? `<div class="popup-distance">${formatDistance(getHaversineDistance(piano, userLocation))}</div>`
         : `<div class="popup-no-location">Enable location to see distance</div>`;
 
     return `
@@ -36,7 +36,7 @@ function createPianoMarker(piano: Piano) {
     return L.marker([piano.lat, piano.lng], { icon });
 }
 
-export function createPianoMarkers(map: L.Map,
+export function createPianoMarkers(mapInstance: L.Map,
                             userLocation: Coord | null,
                             markersRef: React.RefObject<Record<number, L.Marker>>) {
 
@@ -45,7 +45,7 @@ export function createPianoMarkers(map: L.Map,
 
     PIANOS.forEach(piano => {
         const marker = createPianoMarker(piano);
-        marker.addTo(map).bindPopup(buildPopupHTML(piano, userLocation));
+        marker.addTo(mapInstance).bindPopup(buildPopupHTML(piano, userLocation));
         marker.on("click", () => console.log(`Clicked on piano: ${piano.id}`));
     });
 }

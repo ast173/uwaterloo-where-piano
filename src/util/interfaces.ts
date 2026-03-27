@@ -16,6 +16,10 @@ export interface Piano {
     hours: string;
     notes: string;
 }
+
+export function coordToArray(coord: Coord): [number, number] {
+    return [coord.lat, coord.lng];
+}
  
 // function printPiano(piano: Piano): void {
 //     console.log(`

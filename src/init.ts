@@ -1,6 +1,6 @@
 import L from "leaflet";
-import { CENTER } from "./util.ts";
-import { Coord } from "./interfaces.ts";
+import { CENTER } from "./util/util.ts";
+import { Coord } from "./util/interfaces.ts";
 import { addClickPopup } from "./clickPopups.ts";
 
 // ============================== INIT ==============================

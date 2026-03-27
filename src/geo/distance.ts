@@ -1,3 +1,5 @@
+import { Coord } from "../util/interfaces";
+
 // ============================== DISTANCE ==============================
 // https://en.wikipedia.org/wiki/Haversine_formula
 function haversine(lat1: number, lng1: number, lat2: number, lng2: number): number {
@@ -15,9 +17,9 @@ function toRadians(theta: number): number {
     return theta * Math.PI / 180.0;
 }
 
-export function getHaversineDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
+export function getHaversineDistance(coord1: Coord, coord2: Coord): number {
     const r_earth = 6371; // km
-    let theta = inverseHaversine(lat1, lng1, lat2, lng2);
+    let theta = inverseHaversine(coord1.lat, coord1.lng, coord2.lat, coord2.lng);
     return theta * r_earth;
 }
 

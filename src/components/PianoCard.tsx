@@ -1,6 +1,7 @@
-import { Piano } from "./interfaces";
+import { Piano } from "../util/interfaces";
 
-export default function PianoCard({piano}: {piano: Piano}) {
+export default function PianoCard(props: {key: number, piano: Piano}) {
+    const piano = props.piano;
     return (
         <button className="piano-card" onClick={() => locateMarker(piano.id)}>
                 <div className="card-name">{piano.name}</div>
@@ -8,7 +9,7 @@ export default function PianoCard({piano}: {piano: Piano}) {
                 <div className="card-room">{piano.building_code} {piano.room}</div>
                 <div className="card-tags">
                     {piano.tags.map(tag => (
-                        <span key={tag} className="tag">{tag}</span>
+                        <div key={tag} className="tag">{tag}</div>
                     ))}
                 </div>
         </button>

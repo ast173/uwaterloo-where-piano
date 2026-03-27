@@ -115,7 +115,7 @@ body {
     flex-wrap: wrap;
 }
 
-.buttonbar button {
+.search-btn {
     background-color: var(--border-blue);
     color: var(--text);
     font-family: var(--font);
@@ -125,7 +125,12 @@ body {
     padding: 8px 12px;
 }
 
-.buttonbar button:hover {
+.search-btn.toggled {
+    border-color: var(--green);
+    color: var(--green);
+}
+
+.search-btn:hover {
     border-color: var(--gold);
     color: var(--gold);
     cursor: pointer;
@@ -192,6 +197,50 @@ body {
 
 .sidebar::-webkit-scrollbar-thumb:hover {
     background: var(--gold);
+}
+
+.filter-menu, .radius-menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    padding: 4px;
+
+    background-color: var(--bg-dark);
+}
+
+.filter-menu-title, .radius-menu-title {
+    font-size: 1.2rem;
+}
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-top: 1px solid var(--border-blue);
+    justify-content: space-between;
+}
+
+.filter-row input[type="checkbox"] {
+    /* make this black */
+    accent-color: var(--bg-dark);
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+.filter-row input[type="checkbox"]:checked {
+    accent-color: var(--gold);
+}
+
+.radius-menu-row {
+    display: flex;
+    gap: 8px;
+}
+
+.slider {
+    accent-color: var(--gold);
+    cursor: pointer;
 }
 
 /* LEAFLET OVERIDES */
